@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predictive Model: EIC Competence on AI/ML Manuscript Triage</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06080a;--s1:#0c1014;--s2:#131920;--brd:#1e2a36;--txt:#b8c4d0;--dim:#5a6b7d;--red:#e8513a;--gold:#d4a843;--cyan:#3cc4d6;--teal:#2ba88a;--violet:#8b6ed4;--blue:#4a8fd6;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);line-height:1.7;}
+::selection{background:var(--red);color:#fff;}
+
+.hero{padding:4rem 2rem 2.5rem;text-align:center;background:radial-gradient(ellipse at 50% 100%,rgba(232,81,58,.05) 0%,transparent 60%);border-bottom:1px solid var(--brd);}
+.hero h1{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:#e0e6ec;letter-spacing:-.02em;}
+.hero h1 em{color:var(--red);font-style:italic;font-weight:700;}
+.hero .sub{font-size:.78rem;color:var(--dim);max-width:660px;margin:.4rem auto 0;}
+.hero .badge{display:inline-block;margin-top:1rem;padding:4px 14px;border:1px solid var(--brd);border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:.52rem;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;}
+
+.wrap{max-width:1060px;margin:0 auto;padding:2rem 1.5rem;}
+.sh{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--cyan);margin:2.5rem 0 .5rem;}
+.sh em{font-style:italic;color:var(--gold);font-weight:400;}
+.note{font-size:.72rem;color:var(--dim);margin-bottom:1rem;line-height:1.7;}
+
+/* FRAMEWORK BOX */
+.fbox{background:var(--s1);border:1px solid var(--brd);border-radius:8px;padding:1.3rem 1.5rem;margin:1rem 0;}
+.fbox h3{font-family:'IBM Plex Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:.6rem;}
+.fbox p{font-size:.74rem;color:var(--dim);line-height:1.75;}
+.fbox code{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--cyan);background:rgba(60,196,214,.08);padding:1px 5px;border-radius:3px;}
+
+/* EQUATION */
+.eq{background:var(--s2);border:1px solid var(--brd);border-radius:6px;padding:1rem;margin:.8rem 0;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--gold);line-height:2;}
+
+/* PIPELINE */
+.pipeline{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:.5rem;margin:1rem 0;align-items:stretch;}
+@media(max-width:700px){.pipeline{grid-template-columns:1fr;}}
+.pipe-step{background:var(--s1);border:1px solid var(--brd);border-radius:8px;padding:1rem;text-align:center;}
+.pipe-step h4{font-size:.7rem;font-weight:700;color:var(--cyan);margin-bottom:.3rem;}
+.pipe-step .pn{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;line-height:1.1;}
+.pipe-step .pd{font-size:.62rem;color:var(--dim);margin-top:.3rem;line-height:1.5;}
+.pipe-arrow{display:flex;align-items:center;font-size:1.2rem;color:var(--brd);}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;margin:1rem 0;}
+.stat{background:var(--s1);border:1px solid var(--brd);border-radius:8px;padding:1rem .7rem;text-align:center;position:relative;overflow:hidden;}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.stat.r::before{background:var(--red);}.stat.g::before{background:var(--gold);}.stat.c::before{background:var(--cyan);}.stat.t::before{background:var(--teal);}
+.stat .n{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;line-height:1.1;}
+.stat.r .n{color:var(--red);}.stat.g .n{color:var(--gold);}.stat.c .n{color:var(--cyan);}.stat.t .n{color:var(--teal);}
+.stat .l{font-family:'IBM Plex Mono',monospace;font-size:.46rem;color:var(--dim);margin-top:.3rem;text-transform:uppercase;letter-spacing:1px;line-height:1.5;}
+
+/* NARROW TABLE */
+.tw{overflow-x:auto;margin:1rem 0;border:1px solid var(--brd);border-radius:8px;}
+table{width:100%;border-collapse:collapse;font-size:.72rem;}
+thead th{background:var(--s2);color:var(--gold);font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:.5rem;text-transform:uppercase;letter-spacing:1px;padding:8px 10px;text-align:left;border-bottom:2px solid var(--gold);white-space:nowrap;}
+thead th.r{text-align:right;}
+td{padding:7px 10px;border-bottom:1px solid var(--brd);}
+td.r{text-align:right;font-family:'IBM Plex Mono',monospace;font-weight:500;}
+tr:hover td{background:rgba(232,81,58,.03);}
+.jn{font-weight:600;color:#e0e6ec;}.jp{font-size:.58rem;color:var(--dim);}
+.z{color:var(--red);font-weight:700;}
+.hi{color:var(--teal);font-weight:700;}
+.tr td{background:var(--s1);font-weight:700;border-top:2px solid var(--brd);}
+
+/* PROGRESS BARS */
+.pb{height:14px;background:var(--s2);border-radius:3px;overflow:hidden;margin:2px 0;}
+.pb-fill{height:100%;border-radius:3px;transition:width .4s;}
+
+/* HEATMAP TABLE */
+.hm td.cell{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:.62rem;font-weight:600;padding:6px 4px;min-width:55px;}
+.hm .pt-label{font-size:.6rem;color:var(--dim);max-width:120px;white-space:normal;line-height:1.3;}
+.hm .cr td{background:var(--s2);font-size:.5rem;color:var(--cyan);text-transform:uppercase;letter-spacing:1px;padding:5px 10px;}
+
+/* INSIGHTS */
+.ins{background:var(--s1);border-left:3px solid var(--red);border-radius:0 8px 8px 0;padding:.9rem 1.2rem;margin:.7rem 0;}
+.ins h4{font-size:.76rem;font-weight:700;color:var(--red);margin-bottom:.2rem;}
+.ins p{font-size:.72rem;color:var(--dim);line-height:1.7;}
+.ins p strong{color:var(--txt);font-weight:600;}
+
+.ft{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--brd);font-size:.56rem;color:#2d3845;line-height:1.9;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Can They <em>Judge</em> What They Can't <em>Do</em>?</h1>
+  <p class="sub">A predictive model for the probability that an EIC correctly triages an AI/ML manuscript, given zero formal ML training across all 14 editors</p>
+  <div class="badge">Bayesian triage model · 9 journals · 5 paper types · Narrow + Broad · Feb 2026</div>
+</div>
+
+<div class="wrap">
+
+<!-- ===== THE FRAMEWORK ===== -->
+<div class="sh">The <em>Model</em></div>
+
+<div class="fbox">
+<h3>Core Question</h3>
+<p>When an AI/ML manuscript arrives at an EIC's desk, the editor makes <strong style="color:var(--txt)">three sequential decisions</strong>. Each requires different levels of ML expertise. The probability of correct triage is the product of getting all three right.</p>
+</div>
+
+<div class="eq">
+P(Correct Triage) = P(Desk Decision) × P(Reviewer Selection) × P(Adjudication)
+</div>
+
+<div class="pipeline">
+  <div class="pipe-step">
+    <h4>Step 1: Desk Decision</h4>
+    <div class="pn" style="color:var(--cyan)">Reject or Review?</div>
+    <div class="pd">Can the EIC recognize if the ML methods are plausible enough to send for external review?<br><br><strong style="color:var(--txt)">ML expertise needed:</strong> Moderate. Must distinguish legitimate ML methodology from methodological nonsense.</div>
+  </div>
+  <div class="pipe-arrow">→</div>
+  <div class="pipe-step">
+    <h4>Step 2: Reviewer Selection</h4>
+    <div class="pn" style="color:var(--gold)">Who Reviews?</div>
+    <div class="pd">Can the EIC identify reviewers with the <em>specific</em> ML subdomain expertise to evaluate this paper?<br><br><strong style="color:var(--txt)">ML expertise needed:</strong> High. Must know the difference between a CNN expert and an NLP expert, or a random forest user and a transformer specialist.</div>
+  </div>
+  <div class="pipe-arrow">→</div>
+  <div class="pipe-step">
+    <h4>Step 3: Adjudication</h4>
+    <div class="pn" style="color:var(--red)">Accept or Reject?</div>
+    <div class="pd">When reviewers disagree on ML methodology, can the EIC weigh competing technical claims?<br><br><strong style="color:var(--txt)">ML expertise needed:</strong> Highest. Must evaluate arguments about overfitting, data leakage, architecture choices, validation schemes.</div>
+  </div>
+</div>
+
+<!-- ===== MODEL 1: NARROW ===== -->
+<div class="sh">Model 1: <em>Narrow</em> — Personal ML Competence</div>
+<p class="note">Can the EIC <strong>personally</strong> evaluate ML methodology? This is the "desert island" model — no deputies, no board, just the editor and the paper. Score 0–1 with a <strong style="color:var(--red)">hard ceiling of 0.25</strong> without formal ML training.</p>
+
+<div class="fbox">
+<h3>Scoring Formula</h3>
+<p>
+<code>Score = ML_Training(0.50) + ML_Pubs(0.25) + Quant_PhD(0.15) + AI_Engagement(0.10)</code><br>
+<strong style="color:var(--red)">Ceiling rule:</strong> Without <code>ML_Training = 1</code>, score is capped at 0.25. Rationale: understanding p-values and Bayesian priors does not transfer to understanding backpropagation, dropout regularization, or AUROC vs. AUPRC.
+</p>
+</div>
+
+<div class="tw">
+<table>
+<thead><tr><th>EIC</th><th>Journal</th><th class="r">ML Train</th><th class="r">Quant PhD</th><th class="r">AI Deputy</th><th class="r">AI Engage</th><th class="r">Score</th><th>Competence Bar</th><th>Interpretation</th></tr></thead>
+<tbody>
+<tr><td class="jn">Rubin</td><td>NEJM</td><td class="r z">0</td><td class="r">1</td><td class="r">1</td><td class="r">1.0</td><td class="r"><strong>0.250</strong></td><td><div class="pb"><div class="pb-fill" style="width:25%;background:var(--gold)"></div></div></td><td><span class="jp">Quantitative, wrong domain (ceiling)</span></td></tr>
+<tr><td class="jn">Bibbins-Domingo</td><td>JAMA</td><td class="r z">0</td><td class="r">1</td><td class="r">1</td><td class="r">1.0</td><td class="r"><strong>0.250</strong></td><td><div class="pb"><div class="pb-fill" style="width:25%;background:var(--gold)"></div></div></td><td><span class="jp">Quantitative, wrong domain (ceiling)</span></td></tr>
+<tr><td class="jn">Hill</td><td>Circulation</td><td class="r z">0</td><td class="r">1</td><td class="r">0</td><td class="r">0.5</td><td class="r">0.200</td><td><div class="pb"><div class="pb-fill" style="width:20%;background:var(--gold)"></div></div></td><td><span class="jp">Can recognize terms, cannot evaluate</span></td></tr>
+<tr><td class="jn">Laine</td><td>Ann IM</td><td class="r z">0</td><td class="r z">0</td><td class="r z">0</td><td class="r">0.5</td><td class="r">0.050</td><td><div class="pb"><div class="pb-fill" style="width:5%;background:var(--red)"></div></div></td><td><span class="jp">Awareness only, no evaluation</span></td></tr>
+<tr><td class="jn">Sax</td><td>CID</td><td class="r z">0</td><td class="r z">0</td><td class="r z">0</td><td class="r">0.5</td><td class="r">0.050</td><td><div class="pb"><div class="pb-fill" style="width:5%;background:var(--red)"></div></div></td><td><span class="jp">Awareness only, no evaluation</span></td></tr>
+<tr><td class="jn">Fiore</td><td>EID</td><td class="r z">0</td><td class="r z">0</td><td class="r z">0</td><td class="r z">0.0</td><td class="r z">0.000</td><td><div class="pb"><div class="pb-fill" style="width:0%;background:var(--red)"></div></div></td><td><span class="jp">No ML capacity whatsoever</span></td></tr>
+<tr><td class="jn">Sears</td><td>JID</td><td class="r z">0</td><td class="r z">0</td><td class="r z">0</td><td class="r z">0.0</td><td class="r z">0.000</td><td><div class="pb"><div class="pb-fill" style="width:0%;background:var(--red)"></div></div></td><td><span class="jp">No ML capacity whatsoever</span></td></tr>
+<tr><td class="jn">Bedimo</td><td>OFID</td><td class="r z">0</td><td class="r z">0</td><td class="r z">0</td><td class="r z">0.0</td><td class="r z">0.000</td><td><div class="pb"><div class="pb-fill" style="width:0%;background:var(--red)"></div></div></td><td><span class="jp">No ML capacity whatsoever</span></td></tr>
+<tr><td class="jn">Patel</td><td>CMR</td><td class="r z">0</td><td class="r z">0</td><td class="r z">0</td><td class="r z">0.0</td><td class="r z">0.000</td><td><div class="pb"><div class="pb-fill" style="width:0%;background:var(--red)"></div></div></td><td><span class="jp">No ML capacity whatsoever</span></td></tr>
+<tr class="tr"><td colspan="6"><strong>Counterfactual: Kohane (NEJM AI)</strong></td><td class="r"><strong class="hi">1.000</strong></td><td><div class="pb"><div class="pb-fill" style="width:100%;background:var(--teal)"></div></div></td><td><span class="jp">Full ML evaluation ability</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ===== MODEL 2: BROAD ===== -->
+<div class="sh">Model 2: <em>Broad</em> — System-Level Triage Probability</div>
+<p class="note">Accounts for structural workarounds: AI deputies, editorial boards, journal ML publication volume. Modeled across 5 paper types representing the full spectrum of AI/ML manuscript complexity. <strong>Color scale:</strong> <span style="color:var(--teal)">■ green ≥ 0.50</span> · <span style="color:var(--gold)">■ yellow 0.30–0.49</span> · <span style="color:var(--red)">■ red < 0.30</span></p>
+
+<div class="tw">
+<table class="hm">
+<thead>
+<tr><th>EIC</th><th>Journal</th>
+<th class="r">AI Editorial<br><span style="font-weight:400;font-size:.42rem;color:var(--dim)">ML 0.1 | Clin 0.8</span></th>
+<th class="r">Clinical ML<br><span style="font-weight:400;font-size:.42rem;color:var(--dim)">ML 0.5 | Clin 0.7</span></th>
+<th class="r">NLP / Text<br><span style="font-weight:400;font-size:.42rem;color:var(--dim)">ML 0.7 | Clin 0.5</span></th>
+<th class="r">Deep Learning<br><span style="font-weight:400;font-size:.42rem;color:var(--dim)">ML 0.8 | Clin 0.4</span></th>
+<th class="r">Novel Methods<br><span style="font-weight:400;font-size:.42rem;color:var(--dim)">ML 0.9 | Clin 0.3</span></th>
+</tr>
+</thead>
+<tbody>
+<tr><td class="jn">Rubin</td><td><span class="jp">NEJM</span></td>
+<td class="cell" style="background:rgba(43,168,138,.20);color:var(--teal)">0.683</td>
+<td class="cell" style="background:rgba(43,168,138,.15);color:var(--teal)">0.567</td>
+<td class="cell" style="background:rgba(43,168,138,.12);color:var(--teal)">0.509</td>
+<td class="cell" style="background:rgba(212,168,67,.15);color:var(--gold)">0.482</td>
+<td class="cell" style="background:rgba(212,168,67,.12);color:var(--gold)">0.455</td>
+</tr>
+<tr><td class="jn">Bibbins-D.</td><td><span class="jp">JAMA</span></td>
+<td class="cell" style="background:rgba(43,168,138,.22);color:var(--teal)">0.687</td>
+<td class="cell" style="background:rgba(43,168,138,.17);color:var(--teal)">0.579</td>
+<td class="cell" style="background:rgba(43,168,138,.14);color:var(--teal)">0.526</td>
+<td class="cell" style="background:rgba(43,168,138,.12);color:var(--teal)">0.500</td>
+<td class="cell" style="background:rgba(212,168,67,.13);color:var(--gold)">0.475</td>
+</tr>
+<tr><td class="jn">Hill</td><td><span class="jp">Circ</span></td>
+<td class="cell" style="background:rgba(43,168,138,.16);color:var(--teal)">0.621</td>
+<td class="cell" style="background:rgba(212,168,67,.12);color:var(--gold)">0.380</td>
+<td class="cell" style="background:rgba(232,81,58,.12);color:var(--red)">0.279</td>
+<td class="cell" style="background:rgba(232,81,58,.14);color:var(--red)">0.236</td>
+<td class="cell" style="background:rgba(232,81,58,.16);color:var(--red)">0.198</td>
+</tr>
+<tr><td class="jn">Laine</td><td><span class="jp">Ann IM</span></td>
+<td class="cell" style="background:rgba(43,168,138,.14);color:var(--teal)">0.609</td>
+<td class="cell" style="background:rgba(212,168,67,.10);color:var(--gold)">0.347</td>
+<td class="cell" style="background:rgba(232,81,58,.11);color:var(--red)">0.242</td>
+<td class="cell" style="background:rgba(232,81,58,.13);color:var(--red)">0.198</td>
+<td class="cell" style="background:rgba(232,81,58,.15);color:var(--red)">0.160</td>
+</tr>
+<tr><td class="jn">Sax</td><td><span class="jp">CID</span></td>
+<td class="cell" style="background:rgba(43,168,138,.14);color:var(--teal)">0.607</td>
+<td class="cell" style="background:rgba(212,168,67,.10);color:var(--gold)">0.343</td>
+<td class="cell" style="background:rgba(232,81,58,.11);color:var(--red)">0.238</td>
+<td class="cell" style="background:rgba(232,81,58,.13);color:var(--red)">0.194</td>
+<td class="cell" style="background:rgba(232,81,58,.15);color:var(--red)">0.156</td>
+</tr>
+<tr><td class="jn">Fiore</td><td><span class="jp">EID</span></td>
+<td class="cell" style="background:rgba(43,168,138,.13);color:var(--teal)">0.602</td>
+<td class="cell" style="background:rgba(212,168,67,.09);color:var(--gold)">0.330</td>
+<td class="cell" style="background:rgba(232,81,58,.10);color:var(--red)">0.224</td>
+<td class="cell" style="background:rgba(232,81,58,.12);color:var(--red)">0.180</td>
+<td class="cell" style="background:rgba(232,81,58,.16);color:var(--red)">0.142</td>
+</tr>
+<tr><td class="jn">Sears</td><td><span class="jp">JID</span></td>
+<td class="cell" style="background:rgba(43,168,138,.13);color:var(--teal)">0.603</td>
+<td class="cell" style="background:rgba(212,168,67,.09);color:var(--gold)">0.334</td>
+<td class="cell" style="background:rgba(232,81,58,.10);color:var(--red)">0.227</td>
+<td class="cell" style="background:rgba(232,81,58,.12);color:var(--red)">0.184</td>
+<td class="cell" style="background:rgba(232,81,58,.16);color:var(--red)">0.146</td>
+</tr>
+<tr><td class="jn">Bedimo</td><td><span class="jp">OFID</span></td>
+<td class="cell" style="background:rgba(43,168,138,.13);color:var(--teal)">0.604</td>
+<td class="cell" style="background:rgba(212,168,67,.09);color:var(--gold)">0.335</td>
+<td class="cell" style="background:rgba(232,81,58,.10);color:var(--red)">0.229</td>
+<td class="cell" style="background:rgba(232,81,58,.12);color:var(--red)">0.186</td>
+<td class="cell" style="background:rgba(232,81,58,.16);color:var(--red)">0.148</td>
+</tr>
+<tr><td class="jn">Patel</td><td><span class="jp">CMR</span></td>
+<td class="cell" style="background:rgba(43,168,138,.13);color:var(--teal)">0.602</td>
+<td class="cell" style="background:rgba(212,168,67,.09);color:var(--gold)">0.330</td>
+<td class="cell" style="background:rgba(232,81,58,.10);color:var(--red)">0.224</td>
+<td class="cell" style="background:rgba(232,81,58,.12);color:var(--red)">0.180</td>
+<td class="cell" style="background:rgba(232,81,58,.16);color:var(--red)">0.142</td>
+</tr>
+<tr class="tr">
+<td colspan="2"><strong>Average</strong></td>
+<td class="cell" style="color:var(--teal)"><strong>0.624</strong></td>
+<td class="cell" style="color:var(--gold)"><strong>0.394</strong></td>
+<td class="cell" style="color:var(--red)"><strong>0.300</strong></td>
+<td class="cell" style="color:var(--red)"><strong>0.260</strong></td>
+<td class="cell" style="color:var(--red)"><strong>0.225</strong></td>
+</tr>
+<tr class="tr">
+<td colspan="2"><strong>Est. Error Rate</strong></td>
+<td class="cell" style="color:var(--dim)">38%</td>
+<td class="cell" style="color:var(--gold)">61%</td>
+<td class="cell" style="color:var(--red)">70%</td>
+<td class="cell" style="color:var(--red)">74%</td>
+<td class="cell" style="color:var(--red)"><strong>78%</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<!-- ===== BOTTLENECK ANALYSIS ===== -->
+<div class="sh">The <em>Bottleneck</em>: Reviewer Selection</div>
+
+<div class="stats">
+  <div class="stat r"><div class="n">0.225</div><div class="l">P(Correct) for novel<br>ML methods papers</div></div>
+  <div class="stat g"><div class="n">78%</div><div class="l">Estimated<br>error rate</div></div>
+  <div class="stat c"><div class="n">+0.166</div><div class="l">Gain if EICs<br>had ML training</div></div>
+  <div class="stat t"><div class="n">Step 2</div><div class="l">Reviewer selection<br>= critical failure point</div></div>
+</div>
+
+<div class="ins">
+  <h4>Why Reviewer Selection Is the Kill Step</h4>
+  <p>An EIC evaluating an ML paper about <strong>transformer-based AMR prediction from whole-genome sequencing</strong> needs to know: Is this a job for a bioinformatician? A deep learning specialist? Someone who works specifically with sequence models? An AMR microbiologist who uses random forests? Each would evaluate the paper differently, and only the right match catches the right flaws. An EIC without ML training cannot distinguish these subspecialties — they see "someone who does AI" as a single category. This is equivalent to asking a cardiologist to choose between a rheumatologist and a nephrologist for a lupus consult.</p>
+</div>
+
+<div class="ins">
+  <h4>The Deputy Fix: Necessary but Insufficient</h4>
+  <p>NEJM (Kohane) and JAMA (Khera) have appointed ML-credentialed deputies. This boosts their P(Correct) substantially — Bibbins-Domingo's triage probability for novel ML papers is <strong>0.475 vs. 0.142 for Fiore</strong> (a 3.3× difference). But even with a deputy, P(Correct) never exceeds 0.50 for methods-heavy papers. The deputy isn't always consulted, doesn't always see the paper first, and cannot fully substitute for an EIC's own technical judgment during adjudication.</p>
+</div>
+
+<div class="ins">
+  <h4>The ID Journal Desert</h4>
+  <p>All five ID journal EICs score between <strong>0.142 and 0.156</strong> for novel ML methods papers. None has an AI deputy. None has a quantitative PhD. Sax's editorial engagement (CID) gives him a marginal edge (0.156 vs. 0.142), but the practical difference is negligible. For methods-heavy ML papers submitted to ID journals, the model predicts a <strong>~85% error rate</strong> at the EIC triage level.</p>
+</div>
+
+<!-- ===== COUNTERFACTUAL ===== -->
+<div class="sh">The <em>Counterfactual</em>: What If?</div>
+<p class="note">If every EIC had formal ML training (ML_Training = 1), how would triage probabilities change?</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>Paper Type</th><th class="r">Current Avg P(Correct)</th><th class="r">Counterfactual Avg</th><th class="r">Δ Gain</th><th class="r">Error Rate: Now → Then</th></tr></thead>
+<tbody>
+<tr><td>AI policy editorial</td><td class="r">0.624</td><td class="r hi">0.666</td><td class="r">+0.042</td><td class="r">38% → 33%</td></tr>
+<tr><td>Clinical ML application</td><td class="r">0.394</td><td class="r hi">0.517</td><td class="r" style="color:var(--gold)">+0.123</td><td class="r">61% → 48%</td></tr>
+<tr><td>NLP / clinical text</td><td class="r">0.300</td><td class="r hi">0.449</td><td class="r" style="color:var(--gold)">+0.150</td><td class="r">70% → 55%</td></tr>
+<tr><td>Deep learning / imaging</td><td class="r">0.260</td><td class="r hi">0.419</td><td class="r" style="color:var(--gold)">+0.159</td><td class="r">74% → 58%</td></tr>
+<tr><td>Novel ML methods</td><td class="r z">0.225</td><td class="r hi">0.391</td><td class="r" style="color:var(--red)">+0.166</td><td class="r" style="color:var(--red)"><strong>78% → 61%</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="ins">
+  <h4>ML Training Helps Most Where It's Needed Most</h4>
+  <p>The counterfactual gain scales with paper complexity: <strong>+0.042 for editorials, +0.166 for novel methods</strong>. But even with ML training, P(Correct) for novel methods only reaches 0.391 — still a 61% error rate. This means <strong>ML training is necessary but not sufficient</strong>. The editorial triage system itself needs structural reform: dual ML+clinical review tracks, computational methodology checklists (like TRIPOD+AI), and mandatory ML-specialist desk review before any editorial decision.</p>
+</div>
+
+<!-- ===== MODEL ASSUMPTIONS ===== -->
+<div class="sh">Model <em>Assumptions</em> & Limitations</div>
+
+<div class="fbox">
+<h3>Explicit Assumptions</h3>
+<p>
+<strong>1. Multiplicative independence:</strong> The three triage steps are modeled as independent — P(Correct) = product of three probabilities. In reality, a bad desk decision can cascade (sending a flawed paper to review wastes reviewer time and may still lead to publication if reviewers miss the same flaw the EIC missed).<br><br>
+<strong>2. Binary ML training:</strong> ML competence is modeled as present/absent. In reality, there's a spectrum — someone who completed a Coursera ML course is different from someone with a PhD in statistical learning theory. The model's ceiling at 0.25 for untrained editors is a judgment call based on the observation that domain transfer from traditional statistics to ML is incomplete.<br><br>
+<strong>3. Deputy substitutability:</strong> An AI deputy is modeled as providing 35% of the boost of personal ML training across triage steps. The actual substitutability depends on how early the deputy sees the paper, their authority to overrule, and how much the EIC defers to their judgment.<br><br>
+<strong>4. Publication volume as proxy:</strong> A journal's ML publication volume is used as a proxy for editorial board ML capacity. This assumes that journals publishing more ML papers have developed better infrastructure for evaluating them — a reasonable but imperfect assumption.<br><br>
+<strong>5. Base rates:</strong> Even without ML training, experienced editors correctly desk-reject obviously flawed papers at a base rate of ~30% for ML methodology (based on general pattern recognition) and ~90% for clinical content. These base rates are estimated, not empirically measured.
+</p>
+</div>
+
+<div class="fbox">
+<h3>What This Model Does NOT Capture</h3>
+<p>
+<strong>Selection bias:</strong> ML researchers may self-select <em>away</em> from journals where they expect poor evaluation, creating a feedback loop where the journals that need ML papers most receive the fewest.<br><br>
+<strong>Type II errors:</strong> The model focuses on triage accuracy (can the editor correctly prioritize?), not on the direction of errors. A false desk-reject of a transformative ML paper is a much larger loss to science than a false acceptance of a mediocre one.<br><br>
+<strong>Reviewer quality:</strong> Even correctly selected reviewers may not be available, may decline, or may themselves have limited ML expertise in the specific subdomain. The model assumes a correctly selected reviewer provides accurate assessment.
+</p>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="ft">
+  <strong>Model Inputs:</strong> EIC profiles verified via institutional faculty pages, Google Scholar, PubMed, journal editorial pages. ML publication counts from PubMed [Journal] field searches (Feb 2026). Paper type ML/clinical depth scores assigned by domain analysis. All parameter weights (0.50/0.25/0.15/0.10 for narrow model; base rates, deputy boost, board boost for broad model) are informed estimates based on editorial process analysis, not empirically calibrated. This is a structural model illustrating the consequences of a credential gap, not a validated prediction engine.
+  <br><br>
+  <strong>Scope:</strong> 9 US-based journals (4 general medicine, 5 infectious diseases). 14 EICs total (some journals share JAMA Network EIC infrastructure but have distinct specialty EICs). Kohane excluded as purpose-built outlier. Non-US journals excluded.
+  <br><br>
+  <strong>Interpretation:</strong> P(Correct Triage) represents the probability that the editorial triage process reaches the same decision that would be reached by an ML-competent editor evaluating the same paper. It does not imply that current decisions are always wrong — some correct triage occurs through clinical judgment, reviewer selection luck, and editorial board support. The model quantifies the structural disadvantage, not the actual error rate.
+  <br><br>
+  Generated February 27, 2026
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>263 Papers, 0 Experts: AI/ML in US Medical Journals</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06080a;--s1:#0c1014;--s2:#131920;--brd:#1e2a36;--txt:#b8c4d0;--dim:#5a6b7d;--red:#e8513a;--gold:#d4a843;--cyan:#3cc4d6;--teal:#2ba88a;--violet:#8b6ed4;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);line-height:1.7;}
+::selection{background:var(--red);color:#fff;}
+
+.hero{padding:4.5rem 2rem 3rem;text-align:center;background:radial-gradient(ellipse at 30% 80%,rgba(232,81,58,.04) 0%,transparent 50%),radial-gradient(ellipse at 70% 20%,rgba(60,196,214,.03) 0%,transparent 50%);border-bottom:1px solid var(--brd);}
+.hero .num{font-family:'Playfair Display',serif;font-size:6.5rem;font-weight:900;color:var(--red);line-height:1;letter-spacing:-.04em;}
+.hero .num span{color:var(--gold);font-size:2.5rem;vertical-align:super;margin-left:.2rem;}
+.hero h1{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;color:#e0e6ec;margin:.4rem 0 .2rem;}
+.hero .sub{font-size:.78rem;color:var(--dim);max-width:620px;margin:0 auto;}
+.hero .badge{display:inline-block;margin-top:1rem;padding:4px 14px;border:1px solid var(--brd);border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:.54rem;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;}
+
+.wrap{max-width:1020px;margin:0 auto;padding:2rem 1.5rem;}
+.sh{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--cyan);margin:2.5rem 0 .5rem;}
+.sh em{font-style:italic;color:var(--gold);font-weight:400;}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:.7rem;margin:1.2rem 0;}
+.stat{background:var(--s1);border:1px solid var(--brd);border-radius:8px;padding:1.1rem .8rem;text-align:center;position:relative;overflow:hidden;}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.stat.r::before{background:var(--red);}
+.stat.g::before{background:var(--gold);}
+.stat.c::before{background:var(--cyan);}
+.stat.t::before{background:var(--teal);}
+.stat.v::before{background:var(--violet);}
+.stat .n{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;line-height:1.1;}
+.stat.r .n{color:var(--red);}.stat.g .n{color:var(--gold);}.stat.c .n{color:var(--cyan);}.stat.t .n{color:var(--teal);}.stat.v .n{color:var(--violet);}
+.stat .l{font-family:'IBM Plex Mono',monospace;font-size:.48rem;color:var(--dim);margin-top:.35rem;text-transform:uppercase;letter-spacing:1.2px;line-height:1.5;}
+
+/* DUAL COMPARISON */
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0;}
+@media(max-width:700px){.dual{grid-template-columns:1fr;}}
+.dual-box{background:var(--s1);border:1px solid var(--brd);border-radius:8px;padding:1.2rem;text-align:center;}
+.dual-box h3{font-family:'IBM Plex Mono',monospace;font-size:.55rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin-bottom:.8rem;}
+.dual-box .big{font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:900;line-height:1;}
+.dual-box .ctx{font-size:.7rem;color:var(--dim);margin-top:.3rem;}
+
+/* TABLE */
+.tw{overflow-x:auto;margin:1rem 0 1.5rem;border:1px solid var(--brd);border-radius:8px;}
+table{width:100%;border-collapse:collapse;font-size:.74rem;}
+thead th{background:var(--s2);color:var(--gold);font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:.52rem;text-transform:uppercase;letter-spacing:1.2px;padding:9px 10px;text-align:left;border-bottom:2px solid var(--gold);position:sticky;top:0;white-space:nowrap;}
+thead th:nth-child(n+3){text-align:right;}
+td{padding:8px 10px;border-bottom:1px solid var(--brd);}
+td:nth-child(n+3){text-align:right;font-family:'IBM Plex Mono',monospace;font-weight:500;}
+tr:hover td{background:rgba(232,81,58,.03);}
+.cr td{background:var(--s2);font-family:'IBM Plex Mono',monospace;font-size:.52rem;color:var(--cyan);letter-spacing:1.2px;text-transform:uppercase;padding:6px 10px;}
+.jn{font-weight:600;color:#e0e6ec;}.jp{font-size:.58rem;color:var(--dim);}
+.z{color:var(--red);font-weight:700;}
+.tr td{background:var(--s1);font-weight:700;border-top:2px solid var(--brd);}
+
+/* BARS */
+.bars{margin:1.2rem 0;}
+.bar-row{display:flex;align-items:center;margin-bottom:.4rem;gap:.5rem;}
+.bar-label{font-size:.68rem;font-weight:500;width:155px;text-align:right;flex-shrink:0;}
+.bar-track{flex:1;height:26px;background:var(--s1);border-radius:4px;position:relative;overflow:hidden;display:flex;}
+.bar-seg{display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:.52rem;font-weight:600;color:#fff;white-space:nowrap;padding:0 4px;}
+.bar-val{position:absolute;right:6px;top:50%;transform:translateY(-50%);font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--dim);}
+
+/* INSIGHTS */
+.ins{background:var(--s1);border-left:3px solid var(--red);border-radius:0 8px 8px 0;padding:1rem 1.3rem;margin:.8rem 0;}
+.ins h4{font-size:.78rem;font-weight:700;color:var(--red);margin-bottom:.3rem;}
+.ins p{font-size:.74rem;color:var(--dim);line-height:1.7;}
+.ins p strong{color:var(--txt);font-weight:600;}
+
+/* WAFFLE */
+.ww{text-align:center;margin:1.5rem 0;}
+.waffle{display:inline-grid;grid-template-columns:repeat(50,7px);gap:1.5px;}
+.waffle .c{width:7px;height:7px;border-radius:1px;background:var(--brd);}
+.waffle .c.h{background:var(--red);}
+.wn{font-size:.58rem;color:var(--dim);margin-top:.4rem;}
+
+.ft{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--brd);font-size:.58rem;color:#2d3845;line-height:1.9;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="num">263<span>papers</span></div>
+  <h1>Zero Experts at the Gate</h1>
+  <p class="sub">Across 9 top US medical journals, only 263 AI/ML papers were published from 2023–2025 — out of 227,731 published PubMed-wide — reviewed by 14 Editors-in-Chief with zero ML training</p>
+  <div class="badge">PubMed [Journal] field search · Title/Abstract · Broad AI/ML/DL/NN/NLP terms · Feb 27, 2026</div>
+</div>
+
+<div class="wrap">
+
+<!-- ===== HEADLINE STATS ===== -->
+<div class="stats">
+  <div class="stat r"><div class="n">263</div><div class="l">AI/ML papers<br>9 journals · 3 yrs</div></div>
+  <div class="stat g"><div class="n">227,731</div><div class="l">AI/ML papers<br>PubMed-wide · 3 yrs</div></div>
+  <div class="stat c"><div class="n">0.115%</div><div class="l">Share of global<br>AI/ML research</div></div>
+  <div class="stat r"><div class="n">0 / 14</div><div class="l">EICs with ML<br>credentials</div></div>
+  <div class="stat v"><div class="n">3.1×</div><div class="l">Broad vs narrow<br>search multiplier</div></div>
+</div>
+
+<!-- ===== DUAL SEARCH COMPARISON ===== -->
+<div class="sh">Two Searches, <em>One Finding</em></div>
+<p style="font-size:.74rem;color:var(--dim);margin-bottom:.8rem;">We ran both a conservative search ("machine learning" only) and a comprehensive search (adding "deep learning," "artificial intelligence," "neural network," "natural language processing"). The broad search triples the count — but doesn't change the conclusion.</p>
+
+<div class="dual">
+  <div class="dual-box">
+    <h3>🔬 Narrow: "Machine Learning" Only</h3>
+    <div class="big" style="color:var(--cyan)">86</div>
+    <div class="ctx">papers across 9 journals (2023–25)</div>
+    <div class="ctx" style="margin-top:.2rem">out of <strong style="color:var(--txt)">139,206</strong> PubMed-wide = <strong style="color:var(--red)">0.062%</strong></div>
+  </div>
+  <div class="dual-box">
+    <h3>🔭 Broad: All AI/ML Terms</h3>
+    <div class="big" style="color:var(--red)">263</div>
+    <div class="ctx">papers across 9 journals (2023–25)</div>
+    <div class="ctx" style="margin-top:.2rem">out of <strong style="color:var(--txt)">227,731</strong> PubMed-wide = <strong style="color:var(--red)">0.115%</strong></div>
+  </div>
+</div>
+
+<!-- ===== MASTER TABLE ===== -->
+<div class="sh">The <em>Complete</em> Data</div>
+
+<div class="tw">
+<table>
+<thead>
+<tr><th>Journal</th><th>EIC</th><th>IF</th><th colspan="3" style="text-align:center;">— Broad (AI/ML/DL/NN/NLP) —</th><th>3yr</th><th colspan="3" style="text-align:center;">— Narrow (ML only) —</th><th>3yr</th><th>Mult</th></tr>
+<tr><th></th><th></th><th></th><th style="text-align:right">23</th><th style="text-align:right">24</th><th style="text-align:right">25</th><th></th><th style="text-align:right">23</th><th style="text-align:right">24</th><th style="text-align:right">25</th><th></th><th></th></tr>
+</thead>
+<tbody>
+<tr class="cr"><td colspan="12">General Medicine &amp; Cardiovascular</td></tr>
+<tr><td><span class="jn">NEJM</span></td><td><span class="jp">Rubin · Harvard</span></td><td>78.5</td><td>19</td><td>7</td><td>5</td><td><strong>31</strong></td><td>5</td><td>1</td><td class="z">0</td><td>6</td><td>5.2×</td></tr>
+<tr><td><span class="jn">JAMA</span></td><td><span class="jp">Bibbins-Domingo · UCSF</span></td><td>63.1</td><td>20</td><td>25</td><td>35</td><td><strong>80</strong></td><td>3</td><td>4</td><td>7</td><td>14</td><td>5.7×</td></tr>
+<tr><td><span class="jn">Ann Intern Med</span></td><td><span class="jp">Laine · Jefferson</span></td><td>16.1</td><td>5</td><td>15</td><td>16</td><td><strong>36</strong></td><td class="z">0</td><td>4</td><td>3</td><td>7</td><td>5.1×</td></tr>
+<tr><td><span class="jn">Circulation</span></td><td><span class="jp">Hill · UT Southwestern</span></td><td>35.5</td><td>10</td><td>13</td><td>20</td><td><strong>43</strong></td><td>6</td><td>6</td><td>7</td><td>19</td><td>2.3×</td></tr>
+
+<tr class="cr"><td colspan="12">Infectious Diseases</td></tr>
+<tr><td><span class="jn">Clin Infect Dis</span></td><td><span class="jp">Sax · Harvard</span></td><td>8.3</td><td>3</td><td>5</td><td>10</td><td><strong>18</strong></td><td>2</td><td>2</td><td>3</td><td>7</td><td>2.6×</td></tr>
+<tr><td><span class="jn">Emerg Infect Dis</span></td><td><span class="jp">Fiore · CDC</span></td><td>6.6</td><td class="z">0</td><td>1</td><td>1</td><td class="z"><strong>2</strong></td><td class="z">0</td><td class="z">0</td><td class="z">0</td><td class="z">0</td><td>—</td></tr>
+<tr><td><span class="jn">J Infect Dis</span></td><td><span class="jp">Sears · Hopkins</span></td><td>5.2</td><td>2</td><td>7</td><td>11</td><td><strong>20</strong></td><td>1</td><td>6</td><td>8</td><td>15</td><td>1.3×</td></tr>
+<tr><td><span class="jn">Open Forum Infect Dis</span></td><td><span class="jp">Bedimo · VA/UTSW</span></td><td>4.5</td><td>4</td><td>8</td><td>18</td><td><strong>30</strong></td><td>3</td><td>5</td><td>9</td><td>17</td><td>1.8×</td></tr>
+<tr><td><span class="jn">Clin Microbiol Rev</span></td><td><span class="jp">Patel · Mayo</span></td><td>19.3</td><td>1</td><td class="z">0</td><td>2</td><td><strong>3</strong></td><td>1</td><td class="z">0</td><td class="z">0</td><td>1</td><td>3.0×</td></tr>
+
+<tr class="tr"><td colspan="2"><strong>General Medicine (4)</strong></td><td></td><td>54</td><td>60</td><td>76</td><td><strong>190</strong></td><td>14</td><td>15</td><td>17</td><td><strong>46</strong></td><td>4.1×</td></tr>
+<tr class="tr"><td colspan="2"><strong>Infectious Diseases (5)</strong></td><td></td><td>10</td><td>21</td><td>42</td><td><strong>73</strong></td><td>7</td><td>13</td><td>20</td><td><strong>40</strong></td><td>1.8×</td></tr>
+<tr class="tr"><td colspan="2"><strong style="color:var(--red)">ALL 9 JOURNALS</strong></td><td></td><td>64</td><td>81</td><td>118</td><td><strong style="color:var(--red)">263</strong></td><td>21</td><td>28</td><td>37</td><td><strong style="color:var(--red)">86</strong></td><td><strong>3.1×</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ===== YEAR OVER YEAR ===== -->
+<div class="sh">Growth <em>Trajectory</em> (Broad Search)</div>
+
+<div class="bars">
+  <div class="bar-row">
+    <div class="bar-label">9 Journals · 2023</div>
+    <div class="bar-track">
+      <div class="bar-seg" style="width:calc(64/118 * 100%);background:rgba(60,196,214,.6)">64</div>
+      <span class="bar-val"></span>
+    </div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">9 Journals · 2024</div>
+    <div class="bar-track">
+      <div class="bar-seg" style="width:calc(81/118 * 100%);background:rgba(212,168,67,.6)">81</div>
+    </div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">9 Journals · 2025</div>
+    <div class="bar-track">
+      <div class="bar-seg" style="width:100%;background:rgba(232,81,58,.6)">118</div>
+    </div>
+  </div>
+</div>
+<p style="font-size:.7rem;color:var(--dim);margin:.3rem 0 1rem;">Journals grew 64→118 (<strong style="color:var(--gold)">+84%</strong>). PubMed-wide grew 58,641→97,745 (<strong style="color:var(--gold)">+67%</strong>). The journals are growing faster in percentage terms — but from a base so small that the absolute gap widens every year.</p>
+
+<!-- ID TRAJECTORY -->
+<div class="bars">
+  <div class="bar-row">
+    <div class="bar-label" style="color:var(--teal)">ID Journals · 2023</div>
+    <div class="bar-track"><div class="bar-seg" style="width:calc(10/42 * 100%);background:rgba(43,168,138,.6)">10</div></div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label" style="color:var(--teal)">ID Journals · 2024</div>
+    <div class="bar-track"><div class="bar-seg" style="width:calc(21/42 * 100%);background:rgba(43,168,138,.7)">21</div></div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label" style="color:var(--teal)">ID Journals · 2025</div>
+    <div class="bar-track"><div class="bar-seg" style="width:100%;background:rgba(43,168,138,.85)">42</div></div>
+  </div>
+</div>
+<p style="font-size:.7rem;color:var(--dim);margin:.3rem 0;">ID journals grew 10→42 in 3 years — a <strong style="color:var(--teal)">320% increase</strong>. The fastest growth rate of any category. OFID alone went 4→8→18.</p>
+
+<!-- ===== SCALE VISUALIZATION ===== -->
+<div class="sh">The <em>Scale</em> Problem</div>
+
+<p style="font-size:.74rem;color:var(--dim);margin-bottom:.8rem;">If all 227,731 AI/ML papers published PubMed-wide (2023–2025) were represented as a 1,000-square grid, these 9 journals would fill <strong style="color:var(--red)">roughly 1 square</strong>.</p>
+
+<div class="ww">
+  <div class="waffle" id="waffle"></div>
+  <div class="wn"><span style="color:var(--red)">■</span> = all 9 journals combined (263 papers) · Each square ≈ 228 papers · Total grid = 227,731 PubMed AI/ML papers</div>
+</div>
+
+<!-- ===== KEY FINDINGS ===== -->
+<div class="sh">What the <em>Numbers</em> Reveal</div>
+
+<div class="ins">
+  <h4>The Multiplier Effect: "AI" Triples "ML"</h4>
+  <p>The broad search (263) is <strong>3.1× the narrow search (86)</strong>. But the multiplier varies dramatically by journal. NEJM, JAMA, and Annals show 5×+ multipliers — meaning most of their AI/ML content uses the term "artificial intelligence" rather than "machine learning." These are more likely <strong>editorials, commentaries, and policy pieces about AI</strong> rather than original ML research. Circulation, JID, and OFID show lower multipliers (1.3–2.3×), suggesting their content skews toward <strong>actual applied ML methodology</strong>.</p>
+</div>
+
+<div class="ins">
+  <h4>NEJM: Declining, Not Growing</h4>
+  <p>NEJM broad: <strong>19→7→5</strong>. That's a decline. The world's most prestigious medical journal is publishing <em>fewer</em> AI/ML papers each year even as PubMed-wide AI/ML grows 67%. The NEJM AI silo strategy appears to be actively draining computational content from the flagship. In the narrow search, NEJM hit <strong>zero</strong> in 2025.</p>
+</div>
+
+<div class="ins">
+  <h4>JAMA: The Volume Leader, Driven by AI Policy</h4>
+  <p>JAMA leads all 9 journals with <strong>80 broad-search papers</strong> over 3 years, growing 20→25→35. But its 5.7× multiplier (highest of any journal) signals that much of this is "artificial intelligence" commentary, not "machine learning" research. The November 2025 "JAMA Summit on AI" and the "Call for Submissions" editorial confirm JAMA is leaning into AI as a <em>topic of discussion</em> — Bibbins-Domingo is engaging editorially. Whether that translates to publishing more original ML research remains to be seen.</p>
+</div>
+
+<div class="ins">
+  <h4>EID: 2 Papers in the Broad Search. Total.</h4>
+  <p><strong>Emerging Infectious Diseases</strong> — the CDC's flagship — published <strong>2 AI/ML papers total</strong> in 2023–2025 using the broadest possible search terms. Zero in 2023. One in 2024. One in 2025. Meanwhile, genomic surveillance of SARS-CoV-2 variants, ML-driven antimicrobial resistance prediction, and AI-powered wastewater epidemiology were transforming the field EID covers. The journal's near-complete absence from the AI/ML literature is the single most striking finding in this analysis.</p>
+</div>
+
+<div class="ins">
+  <h4>OFID: The ID Standout</h4>
+  <p><strong>Open Forum Infectious Diseases</strong> published <strong>30 broad-search papers</strong> — more than CID (18), EID (2), and CMR (3) combined. Its trajectory (4→8→18) is the steepest growth curve of any ID journal. Its low multiplier (1.8×) means most content is actual ML methodology, not AI commentary. OFID's open-access model and lower impact factor may paradoxically make it more receptive to computational work that higher-IF journals gatekeep more aggressively.</p>
+</div>
+
+<div class="ins">
+  <h4>The 0.115% Bottleneck</h4>
+  <p>These 9 journals — the most influential editorial platforms in US general medicine and infectious diseases — published <strong>0.115% of all AI/ML papers indexed in PubMed</strong> over 3 years. The other 99.885% appeared in informatics journals, engineering journals, specialty computational journals, and preprint servers that most practicing clinicians never read. This creates a translation bottleneck: the science exists, but it doesn't reach the clinicians who need it through the channels they trust.</p>
+</div>
+
+<div class="ins">
+  <h4>ID Is Growing Fastest — From the Lowest Base</h4>
+  <p>ID journals grew from 10 to 42 broad-search papers per year (<strong>+320%</strong>), vs. Gen Med's 54 to 76 (<strong>+41%</strong>). But ID started from almost nothing. Even at 42 papers in 2025, all 5 ID journals combined published fewer AI/ML papers than JAMA alone (35). The gap between where ID needs to be computationally and where its publication infrastructure is remains enormous.</p>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="ft">
+  <strong>Data Source:</strong> PubMed Timeline Results by Year, exported as CSV. All searches used <code>[Journal]</code> field tags to restrict results to the specific journal. Searches executed February 27, 2026.
+  <br><br>
+  <strong>Broad Search:</strong> <code>("machine learning"[Title/Abstract] OR "deep learning"[Title/Abstract] OR "artificial intelligence"[Title/Abstract] OR "neural network"[Title/Abstract] OR "natural language processing"[Title/Abstract]) AND "[Journal]"[Journal]</code>
+  <br><br>
+  <strong>Narrow Search:</strong> <code>"machine learning"[Title/Abstract] AND "[Journal]"[Journal]</code>
+  <br><br>
+  <strong>Validation:</strong> Sum of 9 individual journal broad searches (263) matches combined 9-journal search exactly (263). PubMed-wide broad baseline: 227,731 (2023–2025).
+  <br><br>
+  <strong>Circulation Note:</strong> Circulation per-journal file was not individually uploaded. Circulation counts derived by subtracting NEJM + JAMA + Annals from the General Medicine combined search (file 20), verified against the all-9-journals combined total.
+  <br><br>
+  <strong>Limitations:</strong> Title/Abstract search captures papers that <em>mention</em> AI/ML terms, including editorials, commentaries, letters, and policy pieces — not only original research applying ML methods. The broad search therefore overestimates original ML research. The narrow search ("machine learning" only) more closely tracks applied methodology. 2025 counts may be incomplete due to PubMed indexing lag. 2026 partial-year data excluded from 3-year totals.
+  <br><br>
+  <strong>EIC Credentials:</strong> Assessed via institutional faculty profiles, Google Scholar, PubMed, and journal editorial pages. "0/14" = none of the 14 EICs across these 9 journals has formal ML/CS/informatics training or first-author ML publications. Isaac Kohane (NEJM AI) excluded as purpose-built outlier. All non-US journals excluded per analysis scope.
+  <br><br>
+  Generated February 27, 2026 · PubMed E-utilities data
+</div>
+
+</div>
+
+<script>
+const w=document.getElementById('waffle');
+for(let i=0;i<1000;i++){const c=document.createElement('div');c.className='c'+(i<1?' h':'');w.appendChild(c);}
+</script>
+
+</body>
+</html>

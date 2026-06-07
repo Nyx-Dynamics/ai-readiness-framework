@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>86 Papers, 0 Experts: The ML Gap in US Medical Journals</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#06080a;
+  --s1:#0c1014;
+  --s2:#131920;
+  --brd:#1e2a36;
+  --txt:#b8c4d0;
+  --dim:#5a6b7d;
+  --accent:#e8513a;
+  --gold:#d4a843;
+  --cyan:#3cc4d6;
+  --teal:#2ba88a;
+  --violet:#8b6ed4;
+  --warn:#c44;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);line-height:1.7;font-weight:400;}
+::selection{background:var(--accent);color:#fff;}
+
+.hero{
+  padding:5rem 2rem 3.5rem;text-align:center;
+  background:
+    radial-gradient(ellipse at 30% 80%,rgba(232,81,58,.04) 0%,transparent 50%),
+    radial-gradient(ellipse at 70% 20%,rgba(60,196,214,.03) 0%,transparent 50%);
+  border-bottom:1px solid var(--brd);
+}
+.hero .num{
+  font-family:'Playfair Display',serif;font-size:7rem;font-weight:900;
+  color:var(--accent);line-height:1;letter-spacing:-.04em;
+}
+.hero .num span{color:var(--gold);font-size:3rem;vertical-align:super;margin-left:.3rem;}
+.hero h1{
+  font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;
+  color:#e0e6ec;margin:.5rem 0 .3rem;letter-spacing:-.01em;
+}
+.hero .sub{font-size:.82rem;color:var(--dim);max-width:580px;margin:0 auto;}
+.hero .badge{
+  display:inline-block;margin-top:1.2rem;padding:5px 16px;border:1px solid var(--brd);border-radius:3px;
+  font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;
+}
+
+.wrap{max-width:980px;margin:0 auto;padding:2rem 1.5rem;}
+
+.sh{
+  font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;
+  color:var(--cyan);margin:2.5rem 0 .6rem;
+}
+.sh em{font-style:italic;color:var(--gold);font-weight:400;}
+
+/* BIG STAT BOXES */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem;margin:1.5rem 0;}
+.stat{
+  background:var(--s1);border:1px solid var(--brd);border-radius:8px;padding:1.3rem 1rem;text-align:center;
+  position:relative;overflow:hidden;
+}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.stat.red::before{background:var(--accent);}
+.stat.gold::before{background:var(--gold);}
+.stat.cyan::before{background:var(--cyan);}
+.stat.teal::before{background:var(--teal);}
+.stat .v{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;line-height:1.1;}
+.stat.red .v{color:var(--accent);}
+.stat.gold .v{color:var(--gold);}
+.stat.cyan .v{color:var(--cyan);}
+.stat.teal .v{color:var(--teal);}
+.stat .l{font-family:'IBM Plex Mono',monospace;font-size:.52rem;color:var(--dim);margin-top:.4rem;text-transform:uppercase;letter-spacing:1.2px;line-height:1.5;}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;margin:1.2rem 0 2rem;border:1px solid var(--brd);border-radius:8px;}
+table{width:100%;border-collapse:collapse;font-size:.78rem;}
+thead th{
+  background:var(--s2);color:var(--gold);font-family:'IBM Plex Mono',monospace;font-weight:600;
+  font-size:.56rem;text-transform:uppercase;letter-spacing:1.2px;padding:10px 14px;text-align:left;
+  border-bottom:2px solid var(--gold);position:sticky;top:0;white-space:nowrap;
+}
+thead th:nth-child(n+3){text-align:right;}
+td{padding:9px 14px;border-bottom:1px solid var(--brd);}
+td:nth-child(n+3){text-align:right;font-family:'IBM Plex Mono',monospace;font-weight:500;}
+tr:hover td{background:rgba(232,81,58,.03);}
+.cat-row td{background:var(--s2);font-family:'IBM Plex Mono',monospace;font-size:.56rem;color:var(--cyan);letter-spacing:1.2px;text-transform:uppercase;padding:7px 14px;}
+.jn{font-weight:600;color:#e0e6ec;}
+.jp{font-size:.62rem;color:var(--dim);}
+.eic{font-size:.65rem;color:var(--dim);font-style:italic;}
+.zero{color:var(--accent);font-weight:700;}
+.tot-row td{background:var(--s1);font-weight:700;border-top:2px solid var(--brd);}
+
+/* BAR CHART */
+.bars{margin:1.5rem 0;}
+.bar-row{display:flex;align-items:center;margin-bottom:.5rem;gap:.6rem;}
+.bar-label{font-size:.72rem;font-weight:500;width:140px;text-align:right;flex-shrink:0;}
+.bar-track{flex:1;height:28px;background:var(--s1);border-radius:4px;position:relative;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:600;color:#fff;min-width:fit-content;transition:width .6s ease;}
+.bar-fill.y23{background:rgba(60,196,214,.7);}
+.bar-fill.y24{background:rgba(212,168,67,.7);}
+.bar-fill.y25{background:rgba(232,81,58,.7);}
+.bar-group{display:flex;gap:2px;height:100%;}
+.bar-seg{display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:.55rem;font-weight:600;color:#fff;border-radius:3px;}
+
+/* INSIGHT CARDS */
+.ins{
+  background:var(--s1);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+  padding:1.1rem 1.4rem;margin:1rem 0;
+}
+.ins h4{font-size:.82rem;font-weight:700;color:var(--accent);margin-bottom:.4rem;}
+.ins p{font-size:.78rem;color:var(--dim);line-height:1.7;}
+.ins p strong{color:var(--txt);font-weight:600;}
+
+/* COMPARISON */
+.comp{
+  background:var(--s1);border:1px solid var(--brd);border-radius:8px;padding:1.5rem;
+  margin:1.5rem 0;display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;
+}
+@media(max-width:640px){.comp{grid-template-columns:1fr;}}
+.comp-side{text-align:center;}
+.comp-side .big{font-family:'Playfair Display',serif;font-size:3rem;font-weight:900;line-height:1;}
+.comp-side .desc{font-size:.7rem;color:var(--dim);margin-top:.3rem;}
+.comp-vs{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--dim);font-style:italic;}
+
+/* WAFFLE */
+.waffle-wrap{text-align:center;margin:1.5rem 0;}
+.waffle{display:inline-grid;grid-template-columns:repeat(50,8px);gap:2px;}
+.waffle .cell{width:8px;height:8px;border-radius:1px;background:var(--brd);}
+.waffle .cell.hl{background:var(--accent);}
+.waffle-note{font-size:.62rem;color:var(--dim);margin-top:.5rem;}
+
+.ft{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--brd);font-size:.62rem;color:#333e4d;line-height:1.9;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="num">86<span>papers</span></div>
+  <h1>Zero Experts at the Gate</h1>
+  <p class="sub">Across 9 top US medical journals, only 86 papers with "machine learning" in the title or abstract were published from 2023–2025 — reviewed by 14 Editors-in-Chief with zero ML training</p>
+  <div class="badge">PubMed verified · [Journal] field search · Title/Abstract match · Feb 2026</div>
+</div>
+
+<div class="wrap">
+
+<!-- ===== HEADLINE STATS ===== -->
+<div class="stats">
+  <div class="stat red"><div class="v">86</div><div class="l">ML papers across<br>9 journals (2023–25)</div></div>
+  <div class="stat gold"><div class="v">139,206</div><div class="l">ML papers<br>PubMed-wide (2023–25)</div></div>
+  <div class="stat cyan"><div class="v">0.062%</div><div class="l">Share of global<br>ML research</div></div>
+  <div class="stat red"><div class="v">0 / 14</div><div class="l">EICs with any<br>ML credential</div></div>
+</div>
+
+<!-- ===== MASTER TABLE ===== -->
+<div class="sh">The <em>Data</em></div>
+
+<div class="tbl-wrap">
+<table>
+<thead>
+<tr><th>Journal</th><th>EIC</th><th>2023</th><th>2024</th><th>2025</th><th>3-Yr Total</th><th>ML Cred.</th></tr>
+</thead>
+<tbody>
+<tr class="cat-row"><td colspan="7">General Medicine &amp; Cardiovascular</td></tr>
+<tr>
+  <td><span class="jn">NEJM</span><br><span class="jp">IF 78.5</span></td>
+  <td><span class="eic">Rubin (Harvard)</span></td>
+  <td>5</td><td>1</td><td class="zero">0</td><td>6</td><td class="zero">None</td>
+</tr>
+<tr>
+  <td><span class="jn">JAMA</span><br><span class="jp">IF 63.1</span></td>
+  <td><span class="eic">Bibbins-Domingo (UCSF)</span></td>
+  <td>3</td><td>4</td><td>7</td><td>14</td><td class="zero">None</td>
+</tr>
+<tr>
+  <td><span class="jn">Annals of Internal Medicine</span><br><span class="jp">IF 16.1</span></td>
+  <td><span class="eic">Laine (Jefferson)</span></td>
+  <td class="zero">0</td><td>4</td><td>3</td><td>7</td><td class="zero">None</td>
+</tr>
+<tr>
+  <td><span class="jn">Circulation</span><br><span class="jp">IF 35.5</span></td>
+  <td><span class="eic">Hill (UT Southwestern)</span></td>
+  <td>6</td><td>6</td><td>7</td><td>19</td><td class="zero">None</td>
+</tr>
+
+<tr class="cat-row"><td colspan="7">Infectious Diseases</td></tr>
+<tr>
+  <td><span class="jn">Clinical Infectious Diseases</span><br><span class="jp">IF 8.3</span></td>
+  <td><span class="eic">Sax (Harvard)</span></td>
+  <td>2</td><td>2</td><td>3</td><td>7</td><td class="zero">None</td>
+</tr>
+<tr>
+  <td><span class="jn">Emerging Infectious Diseases</span><br><span class="jp">IF 6.6</span></td>
+  <td><span class="eic">Fiore (CDC)</span></td>
+  <td class="zero">0</td><td class="zero">0</td><td class="zero">0</td><td class="zero">0</td><td class="zero">None</td>
+</tr>
+<tr>
+  <td><span class="jn">J. Infectious Diseases</span><br><span class="jp">IF 5.2</span></td>
+  <td><span class="eic">Sears (Hopkins)</span></td>
+  <td>1</td><td>6</td><td>8</td><td>15</td><td class="zero">None</td>
+</tr>
+<tr>
+  <td><span class="jn">Open Forum Infect. Dis.</span><br><span class="jp">IF ~4.5</span></td>
+  <td><span class="eic">Bedimo (VA/UTSW)</span></td>
+  <td>3</td><td>5</td><td>9</td><td>17</td><td class="zero">None</td>
+</tr>
+<tr>
+  <td><span class="jn">Clinical Microbiology Reviews</span><br><span class="jp">IF 19.3</span></td>
+  <td><span class="eic">Patel (Mayo)</span></td>
+  <td>1</td><td class="zero">0</td><td class="zero">0</td><td>1</td><td class="zero">None</td>
+</tr>
+
+<tr class="tot-row">
+  <td colspan="2"><strong>General Medicine (4 journals)</strong></td>
+  <td>14</td><td>15</td><td>17</td><td>46</td><td></td>
+</tr>
+<tr class="tot-row">
+  <td colspan="2"><strong>Infectious Diseases (5 journals)</strong></td>
+  <td>7</td><td>13</td><td>20</td><td>40</td><td></td>
+</tr>
+<tr class="tot-row">
+  <td colspan="2"><strong>All 9 Journals Combined</strong></td>
+  <td>21</td><td>28</td><td>37</td><td><strong style="color:var(--accent)">86</strong></td><td><strong class="zero">0 / 14</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<!-- ===== THE SCALE PROBLEM ===== -->
+<div class="sh">The <em>Scale</em> Problem</div>
+
+<div class="comp">
+  <div class="comp-side"><div class="big" style="color:var(--accent)">86</div><div class="desc">ML papers in 9 top<br>US medical journals<br>2023–2025</div></div>
+  <div class="comp-vs">vs.</div>
+  <div class="comp-side"><div class="big" style="color:var(--cyan)">139,206</div><div class="desc">ML papers indexed<br>in all of PubMed<br>2023–2025</div></div>
+</div>
+
+<p style="font-size:.78rem;color:var(--dim);text-align:center;margin:1rem 0;">If PubMed's 139,206 ML papers were a grid of 1,000 squares, these 9 journals would be <strong style="color:var(--accent)">less than 1 square</strong>.</p>
+
+<div class="waffle-wrap">
+  <div class="waffle" id="waffle"></div>
+  <div class="waffle-note">Each square = ~139 ML papers. <span style="color:var(--accent)">■</span> Red = all 9 journals combined (86 papers — doesn't fill a single square)</div>
+</div>
+
+<!-- ===== YEAR OVER YEAR ===== -->
+<div class="sh">Year-Over-Year <em>Trajectory</em></div>
+
+<div class="bars">
+  <div class="bar-row">
+    <div class="bar-label" style="color:var(--cyan)">2023</div>
+    <div class="bar-track"><div class="bar-fill y23" style="width:calc(21/37 * 100%)">21 papers</div></div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label" style="color:var(--gold)">2024</div>
+    <div class="bar-track"><div class="bar-fill y24" style="width:calc(28/37 * 100%)">28 papers</div></div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label" style="color:var(--accent)">2025</div>
+    <div class="bar-track"><div class="bar-fill y25" style="width:100%">37 papers</div></div>
+  </div>
+</div>
+
+<p style="font-size:.72rem;color:var(--dim);margin:.5rem 0 .5rem;">Meanwhile, PubMed-wide ML grew from 33,988 (2023) → 44,255 (2024) → 60,963 (2025). A <strong style="color:var(--gold)">79% increase</strong>. These journals grew 21→37, a 76% increase — similar <em>rate</em>, but from a base so small it barely registers.</p>
+
+<!-- ===== KEY FINDINGS ===== -->
+<div class="sh">What This <em>Reveals</em></div>
+
+<div class="ins">
+  <h4>EID: Zero. Not One.</h4>
+  <p><strong>Emerging Infectious Diseases</strong> — published by the CDC, impact factor 6.6, 6th-ranked ID journal — has published <strong>zero</strong> papers with "machine learning" in the title or abstract since 2020. The last ones were in 2019 and 2020. This is a journal covering emerging pathogens in an era where ML-driven genomic surveillance tracked every SARS-CoV-2 variant in real time. The new EIC (Fiore) has no ML training.</p>
+</div>
+
+<div class="ins">
+  <h4>NEJM: 6 Papers in 3 Years — Then Zero in 2025</h4>
+  <p>The world's most prestigious medical journal published <strong>5 ML papers in 2023, 1 in 2024, and 0 in 2025</strong>. This isn't because ML stopped being relevant to medicine. This is a journal that launched NEJM AI specifically to siphon ML content away from the flagship — effectively creating a separate ghetto for computational research rather than integrating it into the main publication.</p>
+</div>
+
+<div class="ins">
+  <h4>OFID and JID: The ID Bright Spots</h4>
+  <p><strong>Open Forum Infectious Diseases</strong> (17 papers) and <strong>Journal of Infectious Diseases</strong> (15 papers) published more ML papers than CID (7), EID (0), and CMR (1) combined. OFID's open-access model may lower barriers for computational researchers. Both show upward trajectories (OFID: 3→5→9; JID: 1→6→8). These are the ID journals most likely to be receptive to ML work.</p>
+</div>
+
+<div class="ins">
+  <h4>Circulation: The Quiet Leader</h4>
+  <p><strong>Circulation</strong> leads all 9 journals with 19 ML papers over 3 years, steady at 6-7 per year. Cardiology has embraced ML earlier than most specialties (ECG interpretation, imaging, risk prediction). Yet its EIC (Joseph Hill, molecular cardiologist) has zero ML credentials — the board does the heavy lifting.</p>
+</div>
+
+<div class="ins">
+  <h4>The Paradox in Numbers</h4>
+  <p>These 9 journals — representing the most influential editorial gatekeepers in US medicine and infectious diseases — account for <strong>0.062% of all ML papers indexed in PubMed</strong>. Meanwhile, their editors shape which ML research gets the imprimatur of clinical authority. The 139,120 ML papers that <em>didn't</em> land in these 9 journals still exist. They're in specialized informatics journals, engineering journals, and preprint servers — where clinicians almost never read them. The funnel is absurdly narrow, and the gatekeepers have no training in evaluating what passes through it.</p>
+</div>
+
+<div class="ins">
+  <h4>The Conservative Search</h4>
+  <p>These counts use <strong>"machine learning" only</strong> in title/abstract. Adding "deep learning," "artificial intelligence," "neural network," and "natural language processing" would increase the numbers — but even doubling or tripling the count wouldn't change the fundamental finding. Whether it's 86 or 250 papers across 9 journals over 3 years, the scale relative to 139,206 PubMed-wide remains vanishingly small.</p>
+</div>
+
+<!-- ===== METHODOLOGY ===== -->
+<div class="ft">
+  <strong>Data Source:</strong> PubMed timeline results exported as CSV. All journal-specific searches used <code>"machine learning"[Title/Abstract] AND "[Journal Name]"[Journal]</code> field tags to ensure results were restricted to papers published in that specific journal. Searches executed February 27, 2026.
+  <br><br>
+  <strong>Search Term:</strong> "machine learning" only (exact phrase in title or abstract). This is a conservative, high-specificity search. Papers using only "artificial intelligence," "deep learning," "neural network," or "NLP" without the phrase "machine learning" are not captured. Actual ML-relevant publication counts are likely higher.
+  <br><br>
+  <strong>PubMed-Wide Baseline:</strong> The comparator search <code>"machine learning"</code> (no journal restriction) returned 139,206 results for 2023–2025 combined (33,988 + 44,255 + 60,963). This includes all journals, conferences, and article types indexed in PubMed.
+  <br><br>
+  <strong>Journals Not Included:</strong> mBio (PubMed search not run), JAMA Internal Medicine, JAMA Surgery, JAMA Oncology, JCI (searches not run). All non-US journals excluded per analysis scope. Adding these would modestly increase numerator but not meaningfully change the 0.062% finding.
+  <br><br>
+  <strong>EIC ML Credentials:</strong> Assessed via institutional faculty profiles, Google Scholar, PubMed author searches, journal editorial pages. "None" = no formal ML/CS/informatics training and no first-author ML publication identified. Isaac Kohane (NEJM AI) excluded as purpose-built outlier.
+  <br><br>
+  <strong>2025 Data Note:</strong> 2025 counts may be incomplete depending on PubMed indexing lag. 2026 counts excluded from 3-year totals.
+  <br><br>
+  Generated February 27, 2026 · PubMed E-utilities data
+</div>
+
+</div>
+
+<script>
+// Waffle chart: 1000 squares, <1 highlighted
+const waffle = document.getElementById('waffle');
+for(let i = 0; i < 1000; i++) {
+  const cell = document.createElement('div');
+  cell.className = 'cell' + (i === 0 ? ' hl' : '');
+  waffle.appendChild(cell);
+}
+</script>
+
+</body>
+</html>

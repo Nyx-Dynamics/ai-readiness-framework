@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>US Medical Journal EICs: ML/AI Credentials Audit</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#07080c;
+  --s1:#0f1118;
+  --s2:#161922;
+  --brd:#252a38;
+  --txt:#cdd1dc;
+  --dim:#6c7288;
+  --ember:#e05a33;
+  --gold:#d4a843;
+  --ice:#4dc4d6;
+  --sage:#5ab88a;
+  --plum:#9b7fd4;
+  --smoke:#3b4058;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--txt);line-height:1.65;font-weight:400;}
+::selection{background:var(--ember);color:#fff;}
+
+/* HERO */
+.hero{
+  padding:4.5rem 2rem 3rem;text-align:center;position:relative;
+  border-bottom:1px solid var(--brd);
+  background:radial-gradient(ellipse at 50% 120%,rgba(224,90,51,.06) 0%,transparent 60%);
+}
+.hero h1{
+  font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:700;
+  color:var(--ember);letter-spacing:-.02em;margin-bottom:.3rem;
+}
+.hero h1 span{color:var(--gold);}
+.hero .sub{font-size:.82rem;color:var(--dim);max-width:640px;margin:.5rem auto 0;font-weight:400;}
+.hero .scope{
+  display:inline-block;margin-top:1rem;padding:5px 14px;border:1px solid var(--brd);border-radius:4px;
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--dim);letter-spacing:1px;text-transform:uppercase;
+}
+
+.wrap{max-width:1020px;margin:0 auto;padding:2rem 1.5rem;}
+
+/* SECTION HEADERS */
+.sh{
+  font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:700;
+  color:var(--ice);margin:3rem 0 .8rem;
+}
+.sh em{font-style:italic;color:var(--gold);font-weight:400;}
+
+.nt{font-size:.76rem;color:var(--dim);margin-bottom:1.2rem;}
+
+/* STATS ROW */
+.sr{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.8rem;margin:1.5rem 0 2rem;}
+.sb{
+  background:var(--s1);border:1px solid var(--brd);border-radius:8px;padding:1.1rem .8rem;text-align:center;
+  transition:border-color .2s;
+}
+.sb:hover{border-color:var(--ember);}
+.sb .v{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:700;line-height:1;}
+.sb .l{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--dim);margin-top:.3rem;text-transform:uppercase;letter-spacing:1px;}
+
+/* MASTER TABLE */
+.mt{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.78rem;}
+.mt thead th{
+  background:var(--s2);color:var(--gold);font-family:'JetBrains Mono',monospace;font-weight:600;
+  font-size:.6rem;text-transform:uppercase;letter-spacing:1px;padding:10px 12px;text-align:left;
+  border-bottom:2px solid var(--gold);position:sticky;top:0;z-index:2;white-space:nowrap;
+}
+.mt td{padding:10px 12px;border-bottom:1px solid var(--brd);vertical-align:top;}
+.mt tr:hover td{background:rgba(224,90,51,.03);}
+.mt .rk{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--gold);text-align:center;}
+.mt .jn{font-weight:600;color:var(--txt);}
+.mt .jp{font-size:.65rem;color:var(--dim);}
+.mt .en{font-weight:600;}
+.mt .ei{font-size:.65rem;color:var(--dim);}
+.mt .if{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--ice);}
+.mt .tag{
+  display:inline-block;padding:2px 6px;border-radius:3px;font-size:.56rem;
+  font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+}
+.tag.none{background:rgba(224,90,51,.12);color:var(--ember);}
+.tag.edit{background:rgba(212,168,67,.12);color:var(--gold);}
+.tag.adj{background:rgba(155,127,212,.12);color:var(--plum);}
+
+/* INSIGHTS */
+.ins{
+  background:var(--s1);border-left:3px solid var(--ember);border-radius:0 8px 8px 0;
+  padding:1.1rem 1.4rem;margin:1rem 0;
+}
+.ins h4{font-size:.82rem;font-weight:700;color:var(--ember);margin-bottom:.4rem;}
+.ins p{font-size:.78rem;color:var(--dim);line-height:1.7;}
+
+/* DETAIL CARDS */
+.dc{
+  background:var(--s1);border:1px solid var(--brd);border-radius:8px;
+  padding:1.3rem 1.5rem;margin-bottom:1rem;
+}
+.dc .hd{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.5rem;margin-bottom:.6rem;padding-bottom:.5rem;border-bottom:1px solid var(--brd);}
+.dc .nm{font-weight:700;font-size:.95rem;}
+.dc .jr{font-size:.72rem;color:var(--dim);}
+.dc .gr{display:grid;grid-template-columns:140px 1fr;gap:.3rem 1rem;font-size:.76rem;}
+@media(max-width:640px){.dc .gr{grid-template-columns:1fr;}}
+.dc .gr dt{font-family:'JetBrains Mono',monospace;font-size:.58rem;font-weight:600;color:var(--smoke);text-transform:uppercase;letter-spacing:.8px;padding-top:.3rem;}
+.dc .gr dd{padding-top:.2rem;margin-bottom:.3rem;}
+.dc .gr dd .red{color:var(--ember);font-weight:600;}
+.dc .gr dd .grn{color:var(--sage);font-weight:600;}
+
+.ft{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--brd);font-size:.65rem;color:#3a3f52;line-height:1.9;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>The <span>ML Blind Spot</span> in US Medical Editing</h1>
+  <p class="sub">A comprehensive audit of machine learning training and first-author ML publications among US-based Editors-in-Chief across general medicine and infectious diseases journals</p>
+  <div class="scope">Scope: US journals only · Academic EICs only · Kohane (NEJM AI) excluded as purpose-built outlier</div>
+</div>
+
+<div class="wrap">
+
+<!-- ===== SUMMARY STATS ===== -->
+<div class="sh">The <em>Bottom Line</em></div>
+
+<div class="sr">
+  <div class="sb"><div class="v" style="color:var(--ember)">14</div><div class="l">US EICs Reviewed</div></div>
+  <div class="sb"><div class="v" style="color:var(--ember)">0</div><div class="l">With ML Training</div></div>
+  <div class="sb"><div class="v" style="color:var(--ember)">0</div><div class="l">First-Author ML Pubs</div></div>
+  <div class="sb"><div class="v" style="color:var(--gold)">3</div><div class="l">Editorial AI Engagement</div></div>
+  <div class="sb"><div class="v" style="color:var(--plum)">1</div><div class="l">Adjacent Quant Methods</div></div>
+</div>
+
+<p class="nt">Fourteen EICs across the highest-impact US-based medical journals — general medicine and infectious diseases — were reviewed. Not a single one has formal training in machine learning, computer science, biomedical informatics, or data science. Not a single one has published a first-author paper using ML methods. Isaac Kohane (NEJM AI) was excluded because he was specifically recruited to lead a purpose-built AI journal — he is the exception that proves the rule.</p>
+
+<!-- ===== MASTER TABLE ===== -->
+<div class="sh"><em>General Medicine</em> + <em>Infectious Diseases</em></div>
+<p class="nt">Ordered by journal impact factor within each category. ML Credential: 🔴 None = no ML training or publications; 🟡 Editorial = AI policy/editorials only; 🟣 Adjacent = quantitative methods related but not ML.</p>
+
+<div style="overflow-x:auto;">
+<table class="mt">
+<thead>
+<tr><th></th><th>Journal</th><th>JIF</th><th>Editor-in-Chief</th><th>Institution</th><th>ML Credential</th></tr>
+</thead>
+<tbody>
+<tr><td colspan="6" style="background:var(--s2);font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--ice);letter-spacing:1px;padding:8px 12px;text-transform:uppercase;">General Medicine</td></tr>
+<tr><td class="rk">1</td><td><span class="jn">NEJM</span><br><span class="jp">Mass. Medical Society</span></td><td class="if">78.5</td><td><span class="en">Eric J. Rubin, MD, PhD</span><br><span class="ei">TB microbiologist</span></td><td>Harvard / Brigham</td><td><span class="tag edit">Editorial</span></td></tr>
+<tr><td class="rk">2</td><td><span class="jn">JAMA</span><br><span class="jp">American Medical Assn.</span></td><td class="if">63.1</td><td><span class="en">Kirsten Bibbins-Domingo, PhD, MD</span><br><span class="ei">CV epidemiologist</span></td><td>UCSF</td><td><span class="tag adj">Adjacent</span></td></tr>
+<tr><td class="rk">3</td><td><span class="jn">Annals of Internal Medicine</span><br><span class="jp">Amer. College of Physicians</span></td><td class="if">16.1</td><td><span class="en">Christine Laine, MD, MPH</span><br><span class="ei">Medical journalist</span></td><td>Thomas Jefferson</td><td><span class="tag edit">Editorial</span></td></tr>
+<tr><td class="rk">4</td><td><span class="jn">JAMA Internal Medicine</span><br><span class="jp">AMA</span></td><td class="if">~15</td><td><span class="en">Sharon K. Inouye, MD, MPH</span><br><span class="ei">Geriatrician</span></td><td>Harvard / Hebrew SeniorLife</td><td><span class="tag none">None</span></td></tr>
+<tr><td class="rk">5</td><td><span class="jn">Circulation</span><br><span class="jp">Amer. Heart Assn.</span></td><td class="if">35.5</td><td><span class="en">Joseph A. Hill, MD, PhD</span><br><span class="ei">Molecular cardiologist</span></td><td>UT Southwestern</td><td><span class="tag none">None</span></td></tr>
+<tr><td class="rk">6</td><td><span class="jn">J. Clinical Investigation</span><br><span class="jp">ASCI</span></td><td class="if">~14</td><td><span class="en">Elizabeth M. McNally, MD, PhD</span><br><span class="ei">Cardiovascular geneticist</span></td><td>Northwestern</td><td><span class="tag none">None</span></td></tr>
+<tr><td class="rk">7</td><td><span class="jn">JAMA Surgery</span><br><span class="jp">AMA</span></td><td class="if">~12</td><td><span class="en">Melina R. Kibbe, MD</span><br><span class="ei">Vascular surgeon</span></td><td>U. of Virginia</td><td><span class="tag none">None</span></td></tr>
+<tr><td class="rk">8</td><td><span class="jn">JAMA Oncology</span><br><span class="jp">AMA</span></td><td class="if">~22</td><td><span class="en">Mary L. (Nora) Disis, MD</span><br><span class="ei">Cancer immunologist</span></td><td>U. of Washington</td><td><span class="tag none">None</span></td></tr>
+
+<tr><td colspan="6" style="background:var(--s2);font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--ice);letter-spacing:1px;padding:8px 12px;text-transform:uppercase;">Infectious Diseases (US Journals Only)</td></tr>
+<tr><td class="rk">9</td><td><span class="jn">Clinical Infectious Diseases</span><br><span class="jp">IDSA / Oxford UP</span></td><td class="if">8.3</td><td><span class="en">Paul E. Sax, MD</span><br><span class="ei">HIV clinician</span></td><td>Harvard / Brigham</td><td><span class="tag edit">Editorial</span></td></tr>
+<tr><td class="rk">10</td><td><span class="jn">Emerging Infectious Diseases</span><br><span class="jp">CDC</span></td><td class="if">6.6</td><td><span class="en">Anthony Fiore, MD, MPH</span><br><span class="ei">Medical epidemiologist</span></td><td>CDC (retired)</td><td><span class="tag none">None</span></td></tr>
+<tr><td class="rk">11</td><td><span class="jn">J. Infectious Diseases</span><br><span class="jp">IDSA / Oxford UP</span></td><td class="if">5.2</td><td><span class="en">Cynthia L. Sears, MD</span><br><span class="ei">Microbiome / CRC researcher</span></td><td>Johns Hopkins</td><td><span class="tag none">None</span></td></tr>
+<tr><td class="rk">12</td><td><span class="jn">Open Forum Infect. Diseases</span><br><span class="jp">IDSA / Oxford UP</span></td><td class="if">~4.5</td><td><span class="en">Roger J. Bedimo, MD</span><br><span class="ei">HIV outcomes researcher</span></td><td>VA / UT Southwestern</td><td><span class="tag none">None</span></td></tr>
+<tr><td class="rk">13</td><td><span class="jn">Clinical Microbiology Reviews</span><br><span class="jp">ASM</span></td><td class="if">19.3</td><td><span class="en">Robin Patel, MD</span><br><span class="ei">Diagnostic microbiologist</span></td><td>Mayo Clinic</td><td><span class="tag none">None</span></td></tr>
+<tr><td class="rk">14</td><td><span class="jn">mBio</span><br><span class="jp">ASM</span></td><td class="if">~5.0</td><td><span class="en">Arturo Casadevall, MD, PhD</span><br><span class="ei">Microbial pathogenesis</span></td><td>Johns Hopkins</td><td><span class="tag none">None</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ===== KEY FINDINGS ===== -->
+<div class="sh">What This <em>Means</em></div>
+
+<div class="ins">
+  <h4>🔴 0 for 14: A Perfect Shutout</h4>
+  <p>Across 14 US-based journal EICs — spanning the most influential general medical and infectious disease publications — there is not a single editor with formal ML training (no CS degree, no informatics certificate, no ML coursework) and not a single first-author publication applying machine learning methods. The score is 0-for-14. This is not a sampling artifact; these are the people who control the publication pipeline for virtually all high-impact US medical research.</p>
+</div>
+
+<div class="ins">
+  <h4>🟡 The "Editorial Engagement" Tier: Policy, Not Practice</h4>
+  <p>Three editors engage with AI at the editorial policy level: <strong>Rubin</strong> (launched NEJM AI, delegated to Kohane), <strong>Bibbins-Domingo</strong> (convened JAMA Summit on AI, appointed Rohan Khera as AI associate editor, published AI guidance for authors), and <strong>Sax</strong> (CID publishes ML-informed ID studies and Sax has engaged editorially with AI topics). But editorial engagement means writing policy about AI, not doing AI. None of these three has trained a model, written a line of Python, or evaluated an ROC curve from their own ML pipeline.</p>
+</div>
+
+<div class="ins">
+  <h4>🟣 The "Adjacent Methods" Exception: Bibbins-Domingo</h4>
+  <p>Bibbins-Domingo comes closest — she has a PhD in epidemiology, chaired UCSF's Dept. of Epidemiology and Biostatistics, and has used simulation modeling (Markov models, microsimulation) in cardiovascular disease research. These are sophisticated quantitative methods. But simulation modeling is not machine learning. The mathematical foundations, validation approaches, and interpretive frameworks are fundamentally different. Calling simulation modeling "ML-adjacent" is generous.</p>
+</div>
+
+<div class="ins">
+  <h4>🧬 The PhD Paradox: Right Rigor, Wrong Domain</h4>
+  <p>Six of 14 EICs hold PhDs: Rubin (microbiology), Bibbins-Domingo (epidemiology), Hill (molecular biology), McNally (cardiovascular genetics), Casadevall (microbial pathogenesis), Sears (implicitly through research focus). These are rigorous doctoral programs. But none teaches gradient descent, cross-validation, neural network architecture, feature engineering, or any core ML curriculum. The EICs have advanced quantitative training — in the wrong quantitative domain.</p>
+</div>
+
+<div class="ins">
+  <h4>🏥 The ID-Specific Gap Is Total</h4>
+  <p>Among the 6 US-based ID journal EICs (Sax, Fiore, Sears, Bedimo, Patel, Casadevall), the ML credential count is: zero training, zero publications. Meanwhile, ML is actively transforming infectious diseases through: genomic variant surveillance (SARS-CoV-2, influenza), AMR prediction from whole-genome sequencing, sepsis early-warning systems using EHR data, drug-target interaction modeling for antimicrobial development, and epidemic forecasting. The editors deciding which of these studies reach top journals have never built a model themselves.</p>
+</div>
+
+<div class="ins">
+  <h4>⚖️ The Structural Workaround vs. The Competency Gap</h4>
+  <p>Journals are aware of the gap and are patching it: NEJM created a whole new journal (NEJM AI) and hired Kohane. JAMA appointed Rohan Khera (Yale, deep learning researcher) as AI associate editor. CID's editorial board includes methodologists. But these are deputy-level patches. The <em>primary</em> gatekeepers — the people who make the initial editorial decision on whether a submitted ML study gets sent for external review, and who select which reviewers evaluate it — have no personal ML competency. They are entirely dependent on their deputies and external reviewers for technical assessment of ML methodology.</p>
+</div>
+
+<div class="ins">
+  <h4>📊 Institutional Distribution: Harvard Still Leads, But ID Is Broader</h4>
+  <p>Harvard holds 3 of 14 EIC seats (Rubin/NEJM, Inouye/JAMA IM, Sax/CID) — 21% of US editorial leadership from a single institution. Johns Hopkins adds 2 (Sears/JID, Casadevall/mBio). Together, Harvard + Hopkins = 5/14 (36%). The remaining 9 seats span UCSF, Thomas Jefferson, UT Southwestern (×2), Northwestern, UVA, UW, Mayo Clinic, and CDC. ID journals show more institutional diversity than general medicine: Mayo, CDC, VA, and UT Southwestern are all represented.</p>
+</div>
+
+<div class="ins">
+  <h4>💡 The Paradox Worth Publishing</h4>
+  <p>Machine learning is the fastest-growing methodological approach in biomedical research. The number of PubMed-indexed papers mentioning "machine learning" grew from ~2,000/year in 2015 to >30,000/year in 2024. These papers are submitted to journals whose editorial gatekeepers have zero hands-on ML experience. This creates an asymmetry: the editors rely entirely on external reviewers for technical ML assessment, but they select those reviewers — a task that itself requires ML competency to do well. This is not an accusation of incompetence; it is a structural observation about how the editorial system has not kept pace with methodological evolution.</p>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="ft">
+  <strong>Scope & Exclusions:</strong> This analysis covers 14 US-based EICs across 8 general medicine/specialty journals and 6 infectious diseases journals. Excluded: all non-US journals (Lancet family, BMJ, CMI, IJID), professional editors without US academic appointments, and Isaac Kohane (NEJM AI) as a purpose-built outlier. JAMA Cardiology excluded because Barbara Casadei (incoming 2026 EIC) is UK-based at Imperial College London.
+  <br><br>
+  <strong>Methodology:</strong> EIC CVs reviewed via institutional faculty profiles, Google Scholar, PubMed, ResearchGate, journal "About the Editors" pages, Wikipedia, and IDSA/ASM/AHA announcements. "First-author ML publication" = paper where EIC was first or corresponding author using ML/DL/AI methods (not merely mentioning AI in an editorial). "ML training" = any degree, certificate, or documented coursework in computer science, data science, biomedical informatics, or machine learning. Impact factors from JCR 2024 (Clarivate 2025); approximate (~) where exact data behind paywall.
+  <br><br>
+  <strong>Caveat:</strong> The absence of personal ML credentials does not necessarily mean poor editorial decision-making about ML papers. Editorial judgment involves clinical relevance, study design, public health impact, and ethical considerations beyond technical ML methodology. However, the complete absence of any ML practitioner experience among 14 primary editorial gatekeepers is a structural observation that warrants attention as ML becomes central to biomedical research methodology.
+  <br><br>
+  Generated February 27, 2026 · Data verified against publicly available sources
+</div>
+
+</div>
+</body>
+</html>

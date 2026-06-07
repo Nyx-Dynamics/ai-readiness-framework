@@ -37,3 +37,12 @@ The full framework document is available as [`AI_Readiness_in_Healthcare_Framewo
 ---
 
 *Published under the Pharma-Restricted Open Healthcare License. Free for healthcare providers, researchers, and non-commercial academic use.*
+
+---
+
+## Repository Contents
+
+| Path | Description |
+|------|-------------|
+| [`AI_Readiness_in_Healthcare_Framework_v2.1.pdf`](./AI_Readiness_in_Healthcare_Framework_v2.1.pdf) | Full framework document (Supplementary S3 of the *Viruses* 2026 paper) |
+| [`eic-competence-audit/`](./eic-competence-audit/) | Cross-sectional credential audit of 9 major US medical journal editors-in-chief — the empirical basis for the Nemesis peer review service |
